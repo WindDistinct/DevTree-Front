@@ -1,7 +1,5 @@
 import CalendarHeatmap from 'react-calendar-heatmap'
 import 'react-calendar-heatmap/dist/styles.css'
-import { Tooltip as ReactTooltip } from 'react-tooltip'
-import 'react-tooltip/dist/react-tooltip.css'
 
 interface VisitActivity {
     date: string
@@ -28,17 +26,12 @@ export default function VisitHeatmap({ data }: { data: VisitActivity[] }) {
                     if (value.count < 10) return 'color-scale-3'
                     return 'color-scale-4'
                 }}
-                tooltipDataAttrs={(value) => {
-                    if (!value || !value.date) return {}
-                    return {
-                        'data-tooltip-id': 'visit-tooltip',
-                        'data-tooltip-content': `${value.count} visita${value.count > 1 ? 's' : ''}`
-                    }
+                titleForValue={(value) => {
+                    if (!value || !value.count) return ''
+                    return `${value.date}: ${value.count} visita${value.count > 1 ? 's' : ''}`
                 }}
                 showWeekdayLabels={true}
             />
-
-            <ReactTooltip id="visit-tooltip" place="top" />
         </div>
     )
 }
