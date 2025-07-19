@@ -1,18 +1,20 @@
-// src/views/StatsView.tsx
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { User } from '../types'
 import VisitHeatmap from '../components/VisitHeatmap'
-import { getActivityStats, type VisitDay } from '../api/DevTreeAPI'
+import { ActivityStatsResponse, getActivityStats } from '../api/DevTreeAPI'
 
 export default function StatsView() {
     const queryClient = useQueryClient()
     const user: User = queryClient.getQueryData(['user'])!
-    const [visitActivity, setVisitActivity] = useState<VisitDay[]>([])
+    const [stats, setStats] = useState<ActivityStatsResponse>({
+        today: 0,
+        dailyActivity: []
+    })
 
     useEffect(() => {
         getActivityStats(user.handle)
-            .then(setVisitActivity)
+            .then(setStats)
             .catch(console.error)
     }, [user.handle])
 
@@ -32,16 +34,12 @@ export default function StatsView() {
                 </div>
 
                 <div className="bg-gray-100 p-5 rounded-lg">
-                    <h3 className="font-bold">Última Visita</h3>
-                    <p className="text-xl">
-                        {user.stats?.visitHistory[0]?.timestamp
-                            ? new Date(user.stats.visitHistory[0].timestamp).toLocaleDateString()
-                            : 'N/A'}
-                    </p>
+                    <h3 className="font-bold">Visitas Hoy</h3>
+                    <p className="text-3xl">{stats.today}</p>
                 </div>
             </div>
 
-            <VisitHeatmap data={visitActivity} />
+            <VisitHeatmap data={stats.dailyActivity} />
         </div>
     )
 }

@@ -65,9 +65,14 @@ export interface VisitDay {
     count: number
 }
 
-export async function getActivityStats(handle: string): Promise<VisitDay[]> {
+export interface ActivityStatsResponse {
+    today: number
+    dailyActivity: VisitDay[]
+}
+
+export async function getActivityStats(handle: string): Promise<ActivityStatsResponse> {
     try {
-        const { data } = await api.get<VisitDay[]>(`/stats/activity/${handle}`)
+        const { data } = await api.get<ActivityStatsResponse>(`/stats/activity/${handle}`)
         return data
     } catch (error) {
         if (isAxiosError(error) && error.response) {

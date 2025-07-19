@@ -23,9 +23,9 @@ export default function VisitHeatmap({ data }: { data: VisitActivity[] }) {
                 values={data}
                 classForValue={(value) => {
                     if (!value || value.count === 0) return 'color-empty'
-                    if (value.count < 3) return 'color-scale-1'
-                    if (value.count < 6) return 'color-scale-2'
-                    if (value.count < 10) return 'color-scale-3'
+                    if (value.count < 6) return 'color-scale-1'
+                    if (value.count < 10) return 'color-scale-2'
+                    if (value.count < 16) return 'color-scale-3'
                     return 'color-scale-4'
                 }}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
