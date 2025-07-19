@@ -109,21 +109,22 @@ export default function LinkTreeView() {
   }
 
   return (
-    <>
-      <div className="space-y-5">
-        {devTreeLinks.map(item => (
-          <DevTreeInput
-            key={item.name}
-            item={item}
-            handleUrlChange={handleUrlChange}
-            handleEnableLink={handleEnableLink}
-          />
-        ))}
-        <button
-          className="bg-cyan-400 p-2 text-lg w-full uppercase text-slate-600 rounded-lg font-bold"
-          onClick={() => mutate(queryClient.getQueryData(['user'])!)}
-        >Guardar Cambios</button>
-      </div>
-    </>
+    <div className="space-y-6">
+      {devTreeLinks.map((item) => (
+        <DevTreeInput
+          key={item.name}
+          item={item}
+          handleUrlChange={handleUrlChange}
+          handleEnableLink={handleEnableLink}
+        />
+      ))}
+
+      <button
+        className="w-full py-3 bg-cyan-500 text-white font-semibold text-lg uppercase rounded-xl hover:bg-cyan-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        onClick={() => mutate(queryClient.getQueryData(['user'])!)}
+      >
+        Guardar Cambios
+      </button>
+    </div>
   )
 }

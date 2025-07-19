@@ -1,7 +1,7 @@
 import { Link, Outlet } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 import NavigationTabs from "./NavigationTabs"
 import { SocialNetwork, User } from '../types'
 import { useEffect, useState } from 'react'
@@ -23,15 +23,15 @@ export default function DevTree({ data }: DevTreeProps) {
 
     const queryClient = useQueryClient()
     const handleDragEnd = (e: DragEndEvent) => {
-        const { active, over } = e
+        const { active, over } = e
 
-        if(over && over.id) {
+        if (over && over.id) {
             const prevIndex = enabledLinks.findIndex(link => link.id === active.id)
             const newIndex = enabledLinks.findIndex(link => link.id === over.id)
             const order = arrayMove(enabledLinks, prevIndex, newIndex)
             setEnabledLinks(order)
 
-            const disabledLinks : SocialNetwork[] = JSON.parse(data.links).filter((item: SocialNetwork) => !item.enabled)
+            const disabledLinks: SocialNetwork[] = JSON.parse(data.links).filter((item: SocialNetwork) => !item.enabled)
             const links = order.concat(disabledLinks)
             queryClient.setQueryData(['user'], (prevData: User) => {
                 return {
@@ -39,45 +39,60 @@ export default function DevTree({ data }: DevTreeProps) {
                     links: JSON.stringify(links)
                 }
             })
-            
+
         }
     }
-    
+
     return (
         <>
             <Header />
-            
-            <div className="bg-gray-100  min-h-screen py-10">
-                <main className="mx-auto max-w-5xl p-10 md:p-0">
+
+            <div className="bg-gray-100 min-h-screen py-10">
+                <main className="mx-auto max-w-6xl px-4 md:px-0">
                     <NavigationTabs />
 
-                    <div className="flex justify-end">
+                    {/* Link a perfil */}
+                    <div className="flex justify-end mt-6">
                         <Link
-                            className="font-bold text-right text-slate-800 text-2xl"
+                            className="text-cyan-600 hover:text-cyan-700 font-semibold text-xl transition"
                             to={`/${data.handle}`}
                             target="_blank"
                             rel="noreferrer noopener"
-                        >Visitar Mi Perfil: /{data.handle}</Link>
+                        >
+                            Visitar Mi Perfil: /{data.handle}
+                        </Link>
                     </div>
 
+                    {/* Zona principal */}
                     <div className="flex flex-col md:flex-row gap-10 mt-10">
-                        <div className="flex-1 ">
+                        {/* Contenido editable */}
+                        <section className="flex-1">
                             <Outlet />
-                        </div>
-                        <div className="w-full md:w-96 bg-slate-800 px-5 py-10 space-y-6">
-                            <p className='text-4xl text-center text-white'>{data.handle}</p>
+                        </section>
 
-                            {data.image &&
-                                <img src={data.image} alt='Imagen Perfil' className='mx-auto max-w-[250px]' />
-                            }
+                        {/* Vista previa del perfil */}
+                        <aside className="w-full md:w-96 bg-slate-800 rounded-xl px-6 py-8 shadow-md space-y-6">
+                            <p className="text-3xl font-bold text-center text-white tracking-wide">
+                                {data.handle}
+                            </p>
 
-                            <p className='text-center text-lg font-black text-white'>{data.description}</p>
+                            {data.image && (
+                                <img
+                                    src={data.image}
+                                    alt="Imagen de Perfil"
+                                    className="mx-auto max-w-[220px] rounded-full border-4 border-white shadow-md"
+                                />
+                            )}
+
+                            <p className="text-center text-base font-semibold text-white">
+                                {data.description}
+                            </p>
 
                             <DndContext
                                 collisionDetection={closestCenter}
                                 onDragEnd={handleDragEnd}
                             >
-                                <div className='mt-20 flex flex-col gap-5'>
+                                <div className="mt-12 flex flex-col gap-4">
                                     <SortableContext
                                         items={enabledLinks}
                                         strategy={verticalListSortingStrategy}
@@ -88,10 +103,11 @@ export default function DevTree({ data }: DevTreeProps) {
                                     </SortableContext>
                                 </div>
                             </DndContext>
-                        </div>
+                        </aside>
                     </div>
                 </main>
             </div>
+
             <Toaster position="top-right" />
         </>
     )

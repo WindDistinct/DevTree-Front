@@ -16,7 +16,7 @@ export default function VisitHeatmap({ data }: { data: VisitActivity[] }) {
     endDate.setMonth(endDate.getMonth() + 1)
 
     return (
-        <div>
+        <div className="p-4 bg-white rounded-lg shadow-md">
             <CalendarHeatmap
                 startDate={startDate}
                 endDate={endDate}
@@ -41,7 +41,7 @@ export default function VisitHeatmap({ data }: { data: VisitActivity[] }) {
                 showWeekdayLabels={true}
             />
 
-            <ReactTooltip id="visit-tooltip" place="top" />
+            <ReactTooltip className="!bg-gray-900 !text-white !text-sm !px-3 !py-2 !rounded" id="visit-tooltip" place="right" />
         </div>
     )
 }
